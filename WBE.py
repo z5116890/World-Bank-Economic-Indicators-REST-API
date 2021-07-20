@@ -2,8 +2,10 @@ import json
 import requests
 import datetime
 import pandas as pd
+#Flask is an API of Python that allows us to build up web-applications
 from flask import Flask
-from flask_restplus import Resource, Api, reqparse
+#Flask-RESTX is an extension for Flask that adds support for quickly building REST APIs.
+from flask_restx import Resource, Api, reqparse
 import sqlite3
 import re
 
@@ -20,14 +22,15 @@ post_parser.add_argument('indicator_id', required=True, location='args')
 get_parser.add_argument('order_by', required=False, location='args')
 get_sorted_parser.add_argument('q', required=False, location='args')
 
-
+#You can provide class-wide documentation using the doc parameter of Api.route()
 @api.route('/collections')
 class collections(Resource):
 
-    #pass in parser so users must enter indicator_id. Will then be able to retrieve it thru parser
+    #The @api.response() decorator allows you to document the known responses and is a shortcut for @api.doc(responses='...').
     @api.response(201, 'Collection Created Successfully')
     @api.response(404, 'Incorrect Indicator')
     @api.response(400, 'Validation Error')
+    #The @api.expect() decorator allows you to specify the expected input fields.
     @api.expect(post_parser)
     def post(self):
         #retrieve indicator_id
